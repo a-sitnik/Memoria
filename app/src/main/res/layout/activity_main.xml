@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:inputType="textMultiLine"
+            android:ems="10"
+        />
+        <ImageButton
+            android:id="@+id/erase"
+            android:onClick="onEraseClick"
+            android:background="@mipmap/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+         />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/line1">
+
+        <ToggleButton
+            android:id="@+id/toggleDate"
+            android:onClick="onDateToggle"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:textOn="@string/dateon"
+            android:textOff="@string/dateof"
+            android:layout_gravity="left"
+            android:textSize="9sp"
+
+            />
+        <ToggleButton
+            android:id="@+id/LongPress"
+            android:onClick="onLongPress"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:textOn="@string/del"
+            android:textOff="@string/send"
+            android:layout_gravity="left"
+            android:textSize="9sp"
+            />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/submit"
+        android:onClick="onSubmitClick"
+        android:background="@color/mildGreen"
+        android:layout_height="wrap_content"
+        android:layout_width="128sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/submit_button"
+        android:layout_below="@+id/line1"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:id="@+id/restore_butt"
+        android:onClick="onRestoreClick"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:background="@mipmap/button_restore"
+        android:layout_below="@+id/line1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:id="@android:id/list"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:longClickable="true"
+        android:layout_below="@+id/line2" />
+
+
+</RelativeLayout>
