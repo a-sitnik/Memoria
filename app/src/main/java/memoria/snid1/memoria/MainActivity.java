@@ -1,6 +1,8 @@
 package memoria.snid1.memoria;
 
 import android.app.ListActivity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.List;
+
+import static java.lang.Math.min;
 
 
 public class MainActivity extends ListActivity implements AdapterView.OnItemLongClickListener{
@@ -134,8 +138,15 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        DAOMem m = (DAOMem) l.getAdapter().getItem(position);
+        String text = m.getNote();
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(text, text);
+        clipboard.setPrimaryClip(clip);
+        String copy = getString(R.string.copied) +" "+ text;
         Toast.makeText(getApplicationContext(),
-                "long press", Toast.LENGTH_SHORT).show();
+                copy.substring(0,min(20, copy.length())), Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

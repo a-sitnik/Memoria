@@ -12,6 +12,7 @@
 
     <string name="del">del</string>
     <string name="send">send</string>
+    <string name="copied">copied:</string>
     <!-- staticText-->
 
 </resources>

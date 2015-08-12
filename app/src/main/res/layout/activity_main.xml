@@ -58,7 +58,7 @@
     <Button
         android:id="@+id/submit"
         android:onClick="onSubmitClick"
-        android:background="@color/mildGreen"
+        android:background="@color/SubmitButton"
         android:layout_height="wrap_content"
         android:layout_width="128sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
