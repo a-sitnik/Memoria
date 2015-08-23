@@ -3,16 +3,23 @@
 
     <string name="versionName">1.0.00</string>
 
-    <string name="action_settings">nothing here</string>
-
     <string name="submit_button">submit</string>
 
+    <!-- menu-->
+    <string name="action_settings">nothing here</string>
+
+    <!-- toggles-->
     <string name="dateon">date</string>
     <string name="dateof">text</string>
 
     <string name="del">del</string>
     <string name="send">send</string>
+    <!-- other -->
     <string name="copied">copied:</string>
-    <!-- staticText-->
+    <string name="shareText">Choose your destiny:</string>
+    <string name="ERROR">Some error</string>
+    <string name="WTF">lolwut?</string>
+    <string name="deletedMessage">DELETED</string>
+     <!--staticText-->
 
 </resources>

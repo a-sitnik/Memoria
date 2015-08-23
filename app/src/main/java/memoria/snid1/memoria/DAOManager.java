@@ -61,13 +61,16 @@ public class DAOManager {
     }
     // changing ifDone to any value, 0 = seen, 1 = unseen, maybe tags later
     public void changeMemStatus(int id, int status){
-        database.execSQL("UPDATE "+ DBHelper.TABLE_COMMENTS +" SET "+ DBHelper.COLUMN_IF_DONE +" = \""+ status +"\" where _id = \""+ id +"\"");
+        database.execSQL("UPDATE " + DBHelper.TABLE_COMMENTS + " SET " + DBHelper.COLUMN_IF_DONE + " = \"" + status + "\" where _id = \"" + id + "\"");
+    }
+
+    public void editMemText(int id, String text){
+        database.execSQL("UPDATE "+ DBHelper.TABLE_COMMENTS +" SET "+ DBHelper.COLUMN_NOTE +" = \""+ text +"\" where _id = \""+ id +"\"");
     }
 
     // instant delete for the future
     public void deleteDAOMem(DAOMem comment) {
         long id = comment.getId();
-        System.out.println("DAOMem deleted with id: " + id);
         database.delete(DBHelper.TABLE_COMMENTS, DBHelper.COLUMN_ID
                 + " = " + id, null);
     }

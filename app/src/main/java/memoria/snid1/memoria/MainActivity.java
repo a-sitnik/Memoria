@@ -6,6 +6,8 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View.OnTouchListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,16 +21,19 @@ import android.widget.ToggleButton;
 
 import java.util.List;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.min;
 
 
-public class MainActivity extends ListActivity implements AdapterView.OnItemLongClickListener{
+public class MainActivity extends ListActivity implements AdapterView.OnItemLongClickListener, OnTouchListener{
 
     final Intent intent = new Intent(Intent.ACTION_SEND);
 
     EditText edText;
     ImageButton restore;
     SharedPreferences sPref;
+
+    ListView listNotes;
     //settings toggles shit
     ToggleButton ifDate;
     ToggleButton longClick;
@@ -40,11 +45,15 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
     int lastDeletedId = -1;
 
 
+
 ///////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listNotes = (ListView)findViewById(android.R.id.list);
+        listNotes.setOnTouchListener(this);
 
         edText = (EditText) findViewById(R.id.editText);
         loadPrefs();
@@ -78,11 +87,15 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         Dao.open();
         super.onResume();
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.add("menu1");
+        menu.add("menu2");
+        menu.add("menu3");
+        menu.add("menu4");
         return true;
     }
 
@@ -100,7 +113,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
 
         return super.onOptionsItemSelected(item);
     }
-
+*/
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -134,7 +147,82 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         showDate = sPref.getBoolean("showDate", true);
         edText.setText(sPref.getString(message, ""));
     }
-////  CLICK LISTENERS////////////////////////////////////////////////////////////////////////////////////////
+    ////  CLICK LISTENERS////////////////////////////////////////////////////////////////////////////////////////
+
+    // SWI(Y)PE
+    long startTime, endTime;
+    float x;
+    float y;
+    Float Xstart, Ystart, Xfinish, Yfinish;
+
+    String sDown;
+    String sMove;
+    String sUp;
+    //Float Xstart, Ystart, Xfinish, Yfinish;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        x = event.getX();
+        y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN: // нажатие
+                startTime = System.currentTimeMillis();
+                Xstart = x;
+                Ystart = y;
+                sDown = "Down: " + x + ",  " + y;
+                sMove = ""; sUp = "";
+                //
+                break;
+            case MotionEvent.ACTION_MOVE: // движение
+                //
+                sMove = "Move: " + x + ",  " + y;
+                //if (Ystart-50 < y || Ystart+50 > y && Xstart-100 > x ||Xstart+100 < x)
+                //    return true;
+                if (startTime + 250 > System.currentTimeMillis()){
+                    if (abs(Xstart-x)<30)
+                        return false;
+                }
+
+                if (abs(Xstart-x)<abs(Ystart-y)*2)
+                    if (Ystart > y+ 15.0 || Ystart < y- 15.0) {
+                        sMove = "yoba: " + x + ",  " + y;
+                        return false;
+                    }
+                break;
+
+
+            case MotionEvent.ACTION_UP: // отпускание
+                //
+                sMove = "";
+                sUp = "Up: " + x + ",  " + y;
+                //
+                endTime = System.currentTimeMillis();
+                Xfinish = x;
+                Yfinish = y;
+
+                //swype R to L
+                if (Xstart - x > 70){
+                    /*
+                    v.getHandler().
+                    v.getparent
+                    */
+
+                }
+                // L to R
+                if ((x - Xstart > 70)){
+
+                }
+
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                return true;
+        }
+        //
+        edText.setText(sDown + "\n" + sMove + "\n" + sUp);
+        //
+
+        return true;
+    }
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -157,31 +245,32 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         }
         return true;
     }
+
     ///SUB LONGCLICK METHODS////////////////////////////////////////////////////////////////////////////////////////
     public void deleteItem(AdapterView<?> parent, int position){ // deleteItem(parent, position);
         DAOMem m = (DAOMem) parent.getAdapter().getItem(position);
         lastDeletedId = (int) m.getId();
         Dao.changeMemStatus(lastDeletedId,1);
         restore.setVisibility(View.VISIBLE);//now must be seen restore button
-        Toast.makeText(getApplicationContext(),"DELETED", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),getString(R.string.deletedMessage), Toast.LENGTH_SHORT).show();
         renderList();
     }
-
     public void shareNote(AdapterView<?> parent, int position){
         intent.setType("text/plain");
         String textToSend = ((DAOMem)parent.getAdapter().getItem(position)).toSend();
         intent.putExtra(Intent.EXTRA_TEXT, textToSend);
         try
         {
-            startActivity(Intent.createChooser(intent, "Choose your destiny"));
+            startActivity(Intent.createChooser(intent, getString(R.string.shareText)));
         }
         catch (android.content.ActivityNotFoundException ex)
         {
-            Toast.makeText(getApplicationContext(), "Some error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.ERROR), Toast.LENGTH_SHORT).show();
         }
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void onEraseClick(View view) {
         edText.setText("");
@@ -195,12 +284,11 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
             renderList();
         }else{
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "lolwut?", Toast.LENGTH_SHORT);
+                    getString(R.string.WTF), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
-
-// on/off time
+    // on/off time
     public void onDateToggle(View view) {
         boolean checked = ((ToggleButton) view).isChecked();
         if(checked){
@@ -210,7 +298,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         }
         renderList();
     }
-// switches long press func
+    // switches long press func
     public void onLongPress(View view) {
         boolean checked = ((ToggleButton) view).isChecked();
         if(checked){
@@ -226,6 +314,4 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         restore.setVisibility(View.GONE);
         renderList();
     }
-
-
 }
