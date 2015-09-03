@@ -6,10 +6,9 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,29 +18,35 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+
+import com.fortysevendeg.swipelistview.*;
+
+
+
 import java.util.List;
+
+import memoria.snid1.memoria.database.DAOManager;
+import memoria.snid1.memoria.database.DAOMem;
+import memoria.snid1.memoria.database.MemAdapter;
+import memoria.snid1.memoria.utils.SettingsManager;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
 
 
-public class MainActivity extends ListActivity implements AdapterView.OnItemLongClickListener, OnTouchListener{
+public class MainActivity extends FragmentActivity /*implements AdapterView.OnItemLongClickListener*/{
 
     final Intent intent = new Intent(Intent.ACTION_SEND);
 
     EditText edText;
-    ImageButton restore;
-    SharedPreferences sPref;
 
-    ListView listNotes;
-    //settings toggles shit
-    ToggleButton ifDate;
-    ToggleButton longClick;
-    boolean showDate;
-    boolean optionLongClick;
+    ImageButton restore;
+    SwipeListView listNotes;
+
+    SettingsManager Settings;
+    private DAOManager Dao;
 
     final String message = "";
-    private DAOManager Dao;
     int lastDeletedId = -1;
 
 
@@ -52,35 +57,29 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listNotes = (ListView)findViewById(android.R.id.list);
-        listNotes.setOnTouchListener(this);
-
-        edText = (EditText) findViewById(R.id.editText);
-        loadPrefs();
-
-        restore = (ImageButton) findViewById(R.id.restore_butt);
-        restore.setVisibility(View.GONE); //because nothing to restore yet
-
-        // initing settings toggles
-        ifDate = (ToggleButton) findViewById(R.id.toggleDate);
-        ifDate.setChecked(showDate);
-        longClick = (ToggleButton) findViewById(R.id.LongPress);
-        longClick.setChecked(optionLongClick);
-
-
+        Settings = new SettingsManager(getApplicationContext());
         Dao = new DAOManager(this);
         Dao.open();
 
+        listNotes = (SwipeListView)findViewById(android.R.id.list);
+        edText = (EditText) findViewById(R.id.editText);
+        edText.setText(Settings.loadPrefs()); //all other settings are also loaded in Settings obj
+        restore = (ImageButton) findViewById(R.id.restore_butt);
+        restore.setVisibility(View.GONE); //because nothing to restore yet
+
         renderList();
 
-        getListView().setOnItemLongClickListener(this);
+        //getListView().setOnItemLongClickListener(this);
+
+        //listNotes.setOnTouchListener(this);
     }
 
     @Override
     protected void onPause() {
         Dao.close();
-        savePrefs();
-        super.onDestroy();
+        Settings.savePrefs(edText.getText().toString());
+        //super.onDestroy();
+        super.onPause();
     }
 
     protected void onResume(){
@@ -120,109 +119,10 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
     void renderList(){
 
         List<DAOMem> Mems = Dao.getAllDAOMems();
-
-        if(showDate == false){ //case if we need only note
-            ArrayAdapter<DAOMem> adapter = new ArrayAdapter<DAOMem>(this, android.R.layout.simple_list_item_1, Mems);
-            setListAdapter(adapter);
-
-        }else {//case if we need note and time
-            MemAdapter adapter = new MemAdapter(this, R.layout.item, Mems);
-            setListAdapter(adapter);
-        }
+        ArrayAdapter<DAOMem> adapter = new ArrayAdapter<DAOMem>(this, android.R.layout.simple_list_item_1, Mems);
+        listNotes.setAdapter(adapter);
     }
-
-    void savePrefs() {
-        sPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putBoolean("showDate", showDate);
-        ed.putBoolean("optionLongClick", optionLongClick);
-        ed.putString(message, edText.getText().toString());
-        ed.commit();
-    }
-
-
-    void loadPrefs() {
-        sPref = getPreferences(MODE_PRIVATE);
-        optionLongClick = sPref.getBoolean("optionLongClick",false);
-        showDate = sPref.getBoolean("showDate", true);
-        edText.setText(sPref.getString(message, ""));
-    }
-    ////  CLICK LISTENERS////////////////////////////////////////////////////////////////////////////////////////
-
-    // SWI(Y)PE
-    long startTime, endTime;
-    float x;
-    float y;
-    Float Xstart, Ystart, Xfinish, Yfinish;
-
-    String sDown;
-    String sMove;
-    String sUp;
-    //Float Xstart, Ystart, Xfinish, Yfinish;
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        x = event.getX();
-        y = event.getY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: // нажатие
-                startTime = System.currentTimeMillis();
-                Xstart = x;
-                Ystart = y;
-                sDown = "Down: " + x + ",  " + y;
-                sMove = ""; sUp = "";
-                //
-                break;
-            case MotionEvent.ACTION_MOVE: // движение
-                //
-                sMove = "Move: " + x + ",  " + y;
-                //if (Ystart-50 < y || Ystart+50 > y && Xstart-100 > x ||Xstart+100 < x)
-                //    return true;
-                if (startTime + 250 > System.currentTimeMillis()){
-                    if (abs(Xstart-x)<30)
-                        return false;
-                }
-
-                if (abs(Xstart-x)<abs(Ystart-y)*2)
-                    if (Ystart > y+ 15.0 || Ystart < y- 15.0) {
-                        sMove = "yoba: " + x + ",  " + y;
-                        return false;
-                    }
-                break;
-
-
-            case MotionEvent.ACTION_UP: // отпускание
-                //
-                sMove = "";
-                sUp = "Up: " + x + ",  " + y;
-                //
-                endTime = System.currentTimeMillis();
-                Xfinish = x;
-                Yfinish = y;
-
-                //swype R to L
-                if (Xstart - x > 70){
-                    /*
-                    v.getHandler().
-                    v.getparent
-                    */
-
-                }
-                // L to R
-                if ((x - Xstart > 70)){
-
-                }
-
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                return true;
-        }
-        //
-        edText.setText(sDown + "\n" + sMove + "\n" + sUp);
-        //
-
-        return true;
-    }
-
+/*
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -238,15 +138,24 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if (optionLongClick) {
-            deleteItem(parent, position);
-        }else{
-            shareNote(parent, position);
+        switch (Settings.getLongClickOption()){
+            case OFF:
+                return false;
+                break;
+            case DELETE:
+                deleteItem(parent, position);
+                break;
+            case UPDATE:
+                break;
+            case COPYCLIPBOARD:
+                break;
+            case SEND:
+                shareNote(parent, position);
         }
         return true;
     }
-
-    ///SUB LONGCLICK METHODS////////////////////////////////////////////////////////////////////////////////////////
+*/
+    ///ACTION METHODS////////////////////////////////////////////////////////////////////////////////////////
     public void deleteItem(AdapterView<?> parent, int position){ // deleteItem(parent, position);
         DAOMem m = (DAOMem) parent.getAdapter().getItem(position);
         lastDeletedId = (int) m.getId();
@@ -288,27 +197,7 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemLong
             toast.show();
         }
     }
-    // on/off time
-    public void onDateToggle(View view) {
-        boolean checked = ((ToggleButton) view).isChecked();
-        if(checked){
-            showDate = true;
-        }else{
-            showDate = false;
-        }
-        renderList();
-    }
-    // switches long press func
-    public void onLongPress(View view) {
-        boolean checked = ((ToggleButton) view).isChecked();
-        if(checked){
-            optionLongClick = true;
-        }else{
-            optionLongClick = false;
-        }
-        renderList();
-    }
-    //onrestore button
+
     public void onRestoreClick(View view) {
         Dao.changeMemStatus(lastDeletedId,0);
         restore.setVisibility(View.GONE);

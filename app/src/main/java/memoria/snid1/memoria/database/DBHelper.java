@@ -1,4 +1,4 @@
-package memoria.snid1.memoria;
+package memoria.snid1.memoria.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

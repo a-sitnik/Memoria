@@ -1,4 +1,4 @@
-package memoria.snid1.memoria;
+package memoria.snid1.memoria.database;
 
 import java.util.Date;
 import java.text.ParseException;

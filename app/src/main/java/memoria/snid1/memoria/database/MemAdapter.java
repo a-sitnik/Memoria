@@ -1,4 +1,4 @@
-package memoria.snid1.memoria;
+package memoria.snid1.memoria.database;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import memoria.snid1.memoria.R;
+import memoria.snid1.memoria.database.DAOMem;
+
 public class MemAdapter extends ArrayAdapter<DAOMem> {
 
     //Dateformat used
@@ -16,7 +19,7 @@ public class MemAdapter extends ArrayAdapter<DAOMem> {
     Context ctx;
     LayoutInflater lInflater;
 
-    MemAdapter(Context context, int textViewResourceId, List<DAOMem> prod) {
+    public MemAdapter(Context context, int textViewResourceId, List<DAOMem> prod) {
         super(context, textViewResourceId, prod);
         ctx = context;
         lInflater = (LayoutInflater) ctx

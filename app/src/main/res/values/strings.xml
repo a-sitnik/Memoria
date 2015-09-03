@@ -20,6 +20,14 @@
     <string name="ERROR">Some error</string>
     <string name="WTF">lolwut?</string>
     <string name="deletedMessage">DELETED</string>
-     <!--staticText-->
+
+    <!--ACTIONS ENUM utils.SettingsManager-->
+    <string name="deleteAct">deletion</string>
+    <string name="updateAct">edit</string>
+    <string name="copyAct">copy</string>
+    <string name="sendAct">share</string>
+    <string name="off">disable</string>
+
 
 </resources>
+    <!--staticText-->
