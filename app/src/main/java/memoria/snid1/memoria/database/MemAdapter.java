@@ -5,51 +5,74 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
-import java.text.SimpleDateFormat;
+
 import java.util.List;
 
 import memoria.snid1.memoria.R;
-import memoria.snid1.memoria.database.DAOMem;
+import memoria.snid1.memoria.utils.DateTimeFormatter;
 
-public class MemAdapter extends ArrayAdapter<DAOMem> {
+public class MemAdapter extends ArrayAdapter {
 
     //Dateformat used
-    static SimpleDateFormat dout = new SimpleDateFormat("HH:mm\ndd MMM yy");
+
     Context ctx;
     LayoutInflater lInflater;
+    List<DAOMem> prod;
 
-    public MemAdapter(Context context, int textViewResourceId, List<DAOMem> prod) {
-        super(context, textViewResourceId, prod);
+    public MemAdapter(Context context,int resource, List<DAOMem> prod) {
+        super(context, resource, prod);
+        //super(context, textViewResourceId, prod);
+        this.prod = prod;
         ctx = context;
-        lInflater = (LayoutInflater) ctx
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        /*lInflater = (LayoutInflater) ctx
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);*/
     }
+/*
+    @Override
+    public int getCount() {
+        return prod.size();
+    }
+
+    @Override
+    public DAOMem getItem(int position) {
+        return prod.get(position);
+    }*/
 
     // formatting date
     public String getFormattedDate(DAOMem mem){
-        return dout.format(mem.getDate());
+        return DateTimeFormatter.date.format(mem.getDate());
     }
-
+    // formatting time
+    public String getFormattedTime(DAOMem mem){
+        return DateTimeFormatter.time.format(mem.getDate());
+    }
+/*
     // id by position
     @Override
     public long getItemId(int position) {
         return getItem(position).getId();
     }
-
+*/
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = lInflater.inflate(R.layout.item, parent, false);
-        }
+        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View newView= inflater.inflate(R.layout.mem_in_list_item, parent, false);
+
+        /*super.getView(position, convertView, parent);
+        View view = convertView;*/
+        /*if (view == null) {
+            view = lInflater.inflate(R.layout.mem_in_list_item, parent, false);
+        }*/
         DAOMem mem = getMem(position);
 
         // filling viev
-        ((TextView) view.findViewById(R.id.noteViev)).setText(mem.getNote());
-        ((TextView) view.findViewById(R.id.dateViev)).setText(getFormattedDate(mem));
+        ((TextView) newView.findViewById(R.id.noteViev)).setText(mem.getNote());
+        ((TextView) newView.findViewById(R.id.dateViev)).setText(getFormattedDate(mem));
+        ((TextView) newView.findViewById(R.id.timeViev)).setText(getFormattedTime(mem));
 
-        return view;
+        return newView;
     }
 
     // obj by position

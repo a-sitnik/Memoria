@@ -2,6 +2,8 @@ package memoria.snid1.memoria.database;
 
 import java.util.Date;
 
+import memoria.snid1.memoria.utils.DateTimeFormatter;
+
 public class DAOMem {
     private long id;
     private String note;
@@ -38,6 +40,6 @@ public class DAOMem {
     }
 
     public String toSend() {
-        return MemAdapter.dout.format(date) + " - " + note + " [Memoria]";
+        return DateTimeFormatter.timeDate.format(date) + " - " + note + " [Memoria]";
     }
 }

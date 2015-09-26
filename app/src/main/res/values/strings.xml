@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Memoria</string>
+    <string name="app_name">Memoria Next</string>
 
-    <string name="versionName">1.0.00</string>
+    <string name="versionName">2.0.00</string>
 
     <string name="submit_button">submit</string>
 

@@ -1,22 +1,17 @@
 package memoria.snid1.memoria;
 
-import android.app.ListActivity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ListAdapter;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 
 import com.fortysevendeg.swipelistview.*;
@@ -45,10 +40,9 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
 
     SettingsManager Settings;
     private DAOManager Dao;
-
+    MemAdapter adapter;
     final String message = "";
     int lastDeletedId = -1;
-
 
 
 ///////
@@ -61,7 +55,7 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
         Dao = new DAOManager(this);
         Dao.open();
 
-        listNotes = (SwipeListView)findViewById(android.R.id.list);
+        listNotes = (SwipeListView)findViewById(R.id.list_s);//android.R.id.list_s
         edText = (EditText) findViewById(R.id.editText);
         edText.setText(Settings.loadPrefs()); //all other settings are also loaded in Settings obj
         restore = (ImageButton) findViewById(R.id.restore_butt);
@@ -99,18 +93,18 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+    public boolean onOptionsItemSelected(MenuItem mem_in_list_item) {
+        // Handle action bar mem_in_list_item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int id = mem_in_list_item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(mem_in_list_item);
     }
 */
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,8 +113,9 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     void renderList(){
 
         List<DAOMem> Mems = Dao.getAllDAOMems();
-        ArrayAdapter<DAOMem> adapter = new ArrayAdapter<DAOMem>(this, android.R.layout.simple_list_item_1, Mems);
+        adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
         listNotes.setAdapter(adapter);
+
     }
 /*
     @Override
