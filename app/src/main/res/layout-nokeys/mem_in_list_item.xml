@@ -1,54 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
 
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:orientation="horizontal"
-        android:weightSum="1">
+    <LinearLayout
+            android:id="@+id/back_item_layout"
+            android:tag="back"
+            style="@style/MyListBackContent"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
 
-        <TextView
-            android:id="@+id/noteViev"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="dsxvgsxfg"
-            android:textSize="18sp"
-            android:textColor="@color/noteText"
-            android:gravity="center_vertical"
-            android:layout_weight="0.9">
-        </TextView>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-            android:id="@+id/linearLayoutInner"
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/after_swipe_button_1"
+
+            android:text="@string/send"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/after_swipe_button_2"
+
+            android:text="@string/sendAct"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/after_swipe_button_3"
+
+            android:text="@string/submit_button"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+
+            android:id="@+id/linearLayout1"
+            style="@style/MyListFrontContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:orientation="vertical"
-            android:layout_weight="0.1"
-            android:weightSum="1"
-            android:layout_gravity="right">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <TextView
-                android:id="@+id/timeViev"
-                android:layout_width="85dp"
+                android:id="@+id/noteViev"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="121212">
-
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="dsxvgsxfg"
+                android:textSize="18sp"
+                android:textColor="@color/noteText"
+                android:gravity="center_vertical"
+                android:layout_weight="0.9">
             </TextView>
-            <TextView
-                android:id="@+id/dateViev"
-                android:layout_width="85dp"
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:id="@+id/linearLayoutInner"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical"
+                android:layout_weight="0.1"
+                android:weightSum="1"
+                android:layout_gravity="right">
 
-                android:text="1344455">
-            </TextView>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/timeViev"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="121212">
 
-</LinearLayout>
+                </TextView>
+                <TextView
+                    android:id="@+id/dateViev"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+
+                    android:text="1344455">
+                </TextView>
+            </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

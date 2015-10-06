@@ -18,13 +18,16 @@ public class SettingsManager {
     static Context context;
     SharedPreferences sPref/* = context.getSharedPreferences("settings", Context.MODE_PRIVATE)*/;
 
+
     //params
     public Actions clickOption;
-
     public Actions longClickOption;
-
     public Actions swipeLeftOption;
     public Actions swipeRightOption;
+    public Actions backButton1;
+    public Actions backButton2;
+    public Actions backButton3;
+
     private enum Actions {
         OFF(R.string.off),
         DELETE(R.string.deleteAct),

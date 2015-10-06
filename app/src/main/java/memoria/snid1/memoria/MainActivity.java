@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -60,13 +62,62 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
         edText.setText(Settings.loadPrefs()); //all other settings are also loaded in Settings obj
         restore = (ImageButton) findViewById(R.id.restore_butt);
         restore.setVisibility(View.GONE); //because nothing to restore yet
-
+        listNotes.setChoiceMode(ListView.CHOICE_MODE_NONE);
         renderList();
 
         //getListView().setOnItemLongClickListener(this);
 
         //listNotes.setOnTouchListener(this);
+        listNotes.setSwipeListViewListener(new BaseSwipeListViewListener() {
+            @Override
+            public void onOpened(int position, boolean toRight) {
+
+            }
+
+            @Override
+            public void onClosed(int position, boolean fromRight) {
+            }
+
+            @Override
+            public void onListChanged() {
+            }
+
+            @Override
+            public void onMove(int position, float x) {
+            }
+
+            @Override
+            public void onStartOpen(int position, int action, boolean right) {
+                Log.d("swipe", String.format("onStartOpen %d - action %d", position, action));
+            }
+
+            @Override
+            public void onStartClose(int position, boolean right) {
+                Log.d("swipe", String.format("onStartClose %d", position));
+            }
+
+            @Override
+            public void onClickFrontView(int position) {
+                //deleteItem(adapter, position);
+                Log.d("swipe", String.format("onClickFrontView %d", position));
+            }
+
+            @Override
+            public void onClickBackView(int position) {
+                Log.d("swipe", String.format("onClickBackView %d", position));
+            }
+
+            @Override
+            public void onDismiss(int[] reverseSortedPositions) {
+                for (int position : reverseSortedPositions) {
+                   // data.remove(position);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+        });
     }
+
 
     @Override
     protected void onPause() {
@@ -151,8 +202,8 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     }
 */
     ///ACTION METHODS////////////////////////////////////////////////////////////////////////////////////////
-    public void deleteItem(AdapterView<?> parent, int position){ // deleteItem(parent, position);
-        DAOMem m = (DAOMem) parent.getAdapter().getItem(position);
+    public void deleteItem(MemAdapter parent, int position){ // deleteItem(parent, position);
+        DAOMem m = (DAOMem) parent.getMem(position);
         lastDeletedId = (int) m.getId();
         Dao.changeMemStatus(lastDeletedId,1);
         restore.setVisibility(View.VISIBLE);//now must be seen restore button

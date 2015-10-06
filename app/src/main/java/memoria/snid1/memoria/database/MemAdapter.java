@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -72,11 +73,12 @@ public class MemAdapter extends ArrayAdapter {
         ((TextView) newView.findViewById(R.id.dateViev)).setText(getFormattedDate(mem));
         ((TextView) newView.findViewById(R.id.timeViev)).setText(getFormattedTime(mem));
 
+        //((Button) newView.findViewById(R.id.after_swipe_button_1)).
         return newView;
     }
 
     // obj by position
-   DAOMem getMem(int position) {
+   public DAOMem getMem(int position) {
         return ((DAOMem) getItem(position));
     }
 
