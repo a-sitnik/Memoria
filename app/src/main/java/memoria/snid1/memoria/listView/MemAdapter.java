@@ -1,4 +1,4 @@
-package memoria.snid1.memoria.database;
+package memoria.snid1.memoria.listView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import memoria.snid1.memoria.R;
+import memoria.snid1.memoria.database.DAOMem;
 import memoria.snid1.memoria.utils.DateTimeFormatter;
 
 public class MemAdapter extends ArrayAdapter {
