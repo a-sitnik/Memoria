@@ -11,8 +11,18 @@ import memoria.snid1.memoria.R;
  * Created by snid1 on 01.09.2015.
  */
 public class SettingsManager {
+    // singleton`s shit
+    public static SettingsManager INSTANCE;
+    public static SettingsManager getINSTANCE(Context ctx){
+        INSTANCE = new SettingsManager(ctx);
+        return INSTANCE;
+    }
+    public static SettingsManager getINSTANCE(){
+        return INSTANCE;
+    }
+
     // inner shit
-    public SettingsManager (Context ctx){
+    private SettingsManager (Context ctx){
         context = ctx;
     }
     static Context context;
@@ -21,14 +31,14 @@ public class SettingsManager {
 
     //params
     public Actions clickOption;
-    public Actions longClickOption;
+//    public Actions longClickOption;
     public Actions swipeLeftOption;
     public Actions swipeRightOption;
     public Actions backButton1;
     public Actions backButton2;
     public Actions backButton3;
 
-    private enum Actions {
+    public enum Actions {
         OFF(R.string.off),
         DELETE(R.string.deleteAct),
         UPDATE(R.string.updateAct),
@@ -49,7 +59,7 @@ public class SettingsManager {
         sPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("clickOption", clickOption.name());
-        ed.putString("longClickOption", longClickOption.name());
+//        ed.putString("longClickOption", longClickOption.name());
         ed.putString("swipeRightOption", swipeRightOption.name());
         ed.putString("swipeLeftOption", swipeLeftOption.name());
 
@@ -62,8 +72,8 @@ public class SettingsManager {
         // -----------------Here to change defaults---------------------------/
         //                                                                   V
         clickOption = Actions.valueOf(sPref.getString("clickOption", "COPYCLIPBOARD"));
-        longClickOption = Actions.valueOf(sPref.getString("longClickOption", "UPDATE"));
-        swipeRightOption = Actions.valueOf(sPref.getString("swipeRightOption", "OFF"));
+//        longClickOption = Actions.valueOf(sPref.getString("longClickOption", "UPDATE"));
+        swipeRightOption = Actions.valueOf(sPref.getString("swipeRightOption", "SEND"));
         swipeLeftOption = Actions.valueOf(sPref.getString("swipeLeftOption", "DELETE"));
 
         return sPref.getString("message", "");
@@ -77,13 +87,13 @@ public class SettingsManager {
         this.clickOption = clickOption;
     }
 
-    public Actions getLongClickOption() {
+/*    public Actions getLongClickOption() {
         return longClickOption;
     }
 
     public void setLongClickOption(Actions longClickOption) {
         this.longClickOption = longClickOption;
-    }
+    }*/
 
     public Actions getSwipeLeftOption() {
         return swipeLeftOption;
