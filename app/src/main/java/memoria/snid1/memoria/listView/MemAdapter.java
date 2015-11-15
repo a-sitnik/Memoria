@@ -31,6 +31,7 @@ public class MemAdapter extends ArrayAdapter {
         /*lInflater = (LayoutInflater) ctx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);*/
     }
+
 /*
     @Override
     public int getCount() {

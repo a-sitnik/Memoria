@@ -29,11 +29,10 @@ public class SettingsManager {
     SharedPreferences sPref/* = context.getSharedPreferences("settings", Context.MODE_PRIVATE)*/;
 
 
+    public boolean swipeDirectionToRight;
     //params
     public Actions clickOption;
-//    public Actions longClickOption;
-    public Actions swipeLeftOption;
-    public Actions swipeRightOption;
+    public Actions swipeOption;
     public Actions backButton1;
     public Actions backButton2;
     public Actions backButton3;
@@ -59,9 +58,8 @@ public class SettingsManager {
         sPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("clickOption", clickOption.name());
-//        ed.putString("longClickOption", longClickOption.name());
-        ed.putString("swipeRightOption", swipeRightOption.name());
-        ed.putString("swipeLeftOption", swipeLeftOption.name());
+        ed.putString("swipeOption", swipeOption.name());
+        ed.putBoolean("swipeDirection", swipeDirectionToRight);
 
         ed.putString("message", message);
         ed.commit();
@@ -72,9 +70,9 @@ public class SettingsManager {
         // -----------------Here to change defaults---------------------------/
         //                                                                   V
         clickOption = Actions.valueOf(sPref.getString("clickOption", "COPYCLIPBOARD"));
-//        longClickOption = Actions.valueOf(sPref.getString("longClickOption", "UPDATE"));
-        swipeRightOption = Actions.valueOf(sPref.getString("swipeRightOption", "SEND"));
-        swipeLeftOption = Actions.valueOf(sPref.getString("swipeLeftOption", "DELETE"));
+
+        swipeOption = Actions.valueOf(sPref.getString("swipeOption", "DELETE"));
+        swipeDirectionToRight = sPref.getBoolean("swipeDirection", true);
 
         return sPref.getString("message", "");
     }
@@ -87,27 +85,12 @@ public class SettingsManager {
         this.clickOption = clickOption;
     }
 
-/*    public Actions getLongClickOption() {
-        return longClickOption;
+    public Actions getSwipeOption() {
+        return swipeOption;
     }
 
-    public void setLongClickOption(Actions longClickOption) {
-        this.longClickOption = longClickOption;
-    }*/
-
-    public Actions getSwipeLeftOption() {
-        return swipeLeftOption;
+    public void setSwipeOption(Actions swipeLeftOption) {
+        this.swipeOption = swipeLeftOption;
     }
 
-    public void setSwipeLeftOption(Actions swipeLeftOption) {
-        this.swipeLeftOption = swipeLeftOption;
-    }
-
-    public Actions getSwipeRightOption() {
-        return swipeRightOption;
-    }
-
-    public void setSwipeRightOption(Actions swipeRightOption) {
-        this.swipeRightOption = swipeRightOption;
-    }
 }

@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 import com.fortysevendeg.swipelistview.*;
-
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ import memoria.snid1.memoria.database.DAOMem;
 import memoria.snid1.memoria.listView.MemAdapter;
 import memoria.snid1.memoria.utils.SettingsManager;
 
-import static java.lang.Math.abs;
+
 import static java.lang.Math.min;
 
 
@@ -35,7 +32,7 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     EditText edText;
     ImageButton restore;
     SwipeListView listNotes;
-
+    List<DAOMem> Mems;
     SettingsManager Settings;
     private DAOManager Dao;
     MemAdapter adapter;
@@ -59,48 +56,44 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
         restore = (ImageButton) findViewById(R.id.restore_butt);
         restore.setVisibility(View.GONE); //because nothing to restore yet
         listNotes.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        renderList();
 
-        //getListView().setOnItemLongClickListener(this);
+        Mems = Dao.getAllDAOMems();
+        adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
+        listNotes.setAdapter(adapter);
 
-        //listNotes.setOnTouchListener(this);
+
         listNotes.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
             public void onOpened(int position, boolean toRight) {
+                //Toast.makeText(getApplicationContext(), "what is onOpened???", Toast.LENGTH_SHORT).show();
+                if (SettingsManager.INSTANCE.swipeDirectionToRight == toRight){
+                    executeListAction(SettingsManager.INSTANCE.getSwipeOption(),position);
+                }
 
             }
 
             @Override
             public void onClosed(int position, boolean fromRight) {
+                //Toast.makeText(getApplicationContext(), "what is onClosed???", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onListChanged() {
+
+                Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onMove(int position, float x) {
+
             }
-            /** Place to set swipe actions **/
-            ///////////////// THIS IS FUCKING SWIPE ACTION
             @Override
             public void onStartOpen(int position, int action, boolean right) {
-                Log.d("swipe", String.format("onStartOpen %d - action %d", position, action));
-                if (right){
-                    executeListAction(SettingsManager.INSTANCE.getSwipeLeftOption(),position);
 
-                    Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    executeListAction(SettingsManager.INSTANCE.getSwipeRightOption(),position);
-
-                    Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
             public void onStartClose(int position, boolean right) {
-                Log.d("swipe", String.format("onStartClose %d", position));
 
             }
             /** Place to set tap action **/
@@ -108,11 +101,11 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
             @Override
             public void onClickFrontView(int position) {
                     executeListAction(SettingsManager.INSTANCE.clickOption, position);
-                Log.d("swipe", String.format("onClickFrontView %d", position));
+                Log.d("click", String.format("onClickFrontView %d", position));
             }
             @Override
             public void onClickBackView(int position) {
-                Log.d("swipe", String.format("onClickBackView %d", position));
+                Log.d("back click", String.format("onClickBackView %d", position));
             }
 
             @Override
@@ -120,7 +113,7 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
                 for (int position : reverseSortedPositions) {
                     // data.remove(position);
                 }
-                adapter.notifyDataSetChanged();
+                renderList();
             }
 
         });
@@ -170,46 +163,14 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
 
 
     void renderList() {
-
-        List<DAOMem> Mems = Dao.getAllDAOMems();
-        adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
-        listNotes.setAdapter(adapter);
+        Mems.clear();
+        Mems.addAll(Dao.getAllDAOMems());
+        adapter.notifyDataSetChanged();
+        //adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
+        //listNotes.setAdapter(adapter);
 
     }
 
-    /*
-        @Override
-        protected void onListItemClick(ListView l, View v, int position, long id) {
-            super.onListItemClick(l, v, position, id);
-            DAOMem m = (DAOMem) l.getAdapter().getItem(position);
-            String text = m.getNote();
-
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText(text, text);
-            clipboard.setPrimaryClip(clip);
-            String copy = getString(R.string.copied) +" "+ text;
-            Toast.makeText(getApplicationContext(),
-                    copy.substring(0,min(20, copy.length())), Toast.LENGTH_SHORT).show();
-        }
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            switch (Settings.getLongClickOption()){
-                case OFF:
-                    return false;
-                    break;
-                case DELETE:
-                    deleteItem(parent, position);
-                    break;
-                case UPDATE:
-                    break;
-                case COPYCLIPBOARD:
-                    break;
-                case SEND:
-                    shareNote(parent, position);
-            }
-            return true;
-        }
-    */
     ///Swipe ACTION SELECTOR & METHODS////////////////////////////////////////////////////////////////////////////////////////
     public void executeListAction(SettingsManager.Actions act, int position) {
         switch (act) {
