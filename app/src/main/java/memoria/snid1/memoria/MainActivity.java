@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.fortysevendeg.swipelistview.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import memoria.snid1.memoria.database.DAOManager;
@@ -32,12 +33,14 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     EditText edText;
     ImageButton restore;
     SwipeListView listNotes;
-    List<DAOMem> Mems;
+    ArrayList<DAOMem> Mems;
     SettingsManager Settings;
     private DAOManager Dao;
     MemAdapter adapter;
     final String message = "";
+
     int lastDeletedId = -1;
+    int lastDeletedPosition = -1;
     DAOMem lastDel;
 
     ///////
@@ -79,7 +82,7 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
 
             @Override
             public void onListChanged() {
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
             }
 
@@ -162,14 +165,14 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /*void renderList() {
+    void refreshList() {
         Mems.clear();
         Mems.addAll(Dao.getAllDAOMems());
         adapter.notifyDataSetChanged();
         //adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
         //listNotes.setAdapter(adapter);
 
-    }*/
+    }
 
     ///Swipe ACTION SELECTOR & METHODS////////////////////////////////////////////////////////////////////////////////////////
     public void executeListAction(SettingsManager.Actions act, int position) {
@@ -204,12 +207,13 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     }
     public void deleteItem(int position) { // deleteItem(position);
         DAOMem m = adapter.getMem(position);
+        lastDeletedPosition = position;
         lastDeletedId = (int) m.getId();
         Dao.changeMemStatus(lastDeletedId, 1);
         restore.setVisibility(View.VISIBLE);//now must be seen restore button
         Toast.makeText(getApplicationContext(), getString(R.string.deletedMessage), Toast.LENGTH_SHORT).show();
         lastDel = Mems.get(position);
-        Mems.remove(position);
+        adapter.remove(Mems.get(position));
         //adapter.notifyDataSetChanged();
         //renderList();
     }
@@ -236,10 +240,11 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     public void onSubmitClick(View view) {
         String brunnenG = edText.getText().toString();
         if (!brunnenG.isEmpty()) {
-            Mems.add(Dao.addNote(brunnenG));
+            //adapter.add(Dao.addNote(brunnenG)); TODO: make this working
+            Dao.addNote(brunnenG);
             edText.setText("");
-            //renderList();
-            adapter.notifyDataSetChanged();
+            refreshList();
+            //adapter.notifyDataSetChanged();
         } else {
             Toast toast = Toast.makeText(getApplicationContext(),
                     getString(R.string.WTF), Toast.LENGTH_SHORT);
@@ -249,9 +254,9 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
 
     public void onRestoreClick(View view) {
         Dao.changeMemStatus(lastDeletedId, 0);
-        Mems.add(/*lastDeletedId,*/lastDel);
+        adapter.insert(lastDel, lastDeletedPosition);
         restore.setVisibility(View.GONE);
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
         //renderList();
     }
 }

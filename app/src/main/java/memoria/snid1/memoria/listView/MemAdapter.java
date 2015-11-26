@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import memoria.snid1.memoria.R;
@@ -21,9 +22,9 @@ public class MemAdapter extends ArrayAdapter {
 
     Context ctx;
     LayoutInflater lInflater;
-    List<DAOMem> prod;
+    ArrayList<DAOMem> prod;
 
-    public MemAdapter(Context context,int resource, List<DAOMem> prod) {
+    public MemAdapter(Context context,int resource, ArrayList<DAOMem> prod) {
         super(context, resource, prod);
         //super(context, textViewResourceId, prod);
         this.prod = prod;
@@ -32,7 +33,7 @@ public class MemAdapter extends ArrayAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);*/
     }
 
-/*
+
     @Override
     public int getCount() {
         return prod.size();
@@ -41,7 +42,7 @@ public class MemAdapter extends ArrayAdapter {
     @Override
     public DAOMem getItem(int position) {
         return prod.get(position);
-    }*/
+    }
 
     // formatting date
     public String getFormattedDate(DAOMem mem){

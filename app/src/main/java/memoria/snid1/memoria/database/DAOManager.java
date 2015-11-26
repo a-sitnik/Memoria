@@ -75,8 +75,10 @@ public class DAOManager {
                 + " = " + id, null);
     }
 
-    public List<DAOMem> getAllDAOMems() {
-        List<DAOMem> comments = new ArrayList<DAOMem>();
+
+
+    public ArrayList<DAOMem> getAllDAOMems() {
+        ArrayList<DAOMem> comments = new ArrayList<DAOMem>();
 
         Cursor cursor = database.query(DBHelper.TABLE_COMMENTS,
                 allColumns, DBHelper.COLUMN_IF_DONE+ " = 0", null, null, null, DBHelper.COLUMN_ID+ " DESC");
