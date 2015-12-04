@@ -61,6 +61,10 @@ public class SettingsManager {
         ed.putString("swipeOption", swipeOption.name());
         ed.putBoolean("swipeDirection", swipeDirectionToRight);
 
+        ed.putString("backButton1", backButton1.name());
+        ed.putString("backButton2", backButton2.name());
+        ed.putString("backButton3", backButton3.name());
+
         ed.putString("message", message);
         ed.commit();
     }
@@ -70,9 +74,13 @@ public class SettingsManager {
         // -----------------Here to change defaults---------------------------/
         //                                                                   V
         clickOption = Actions.valueOf(sPref.getString("clickOption", "COPYCLIPBOARD"));
-
         swipeOption = Actions.valueOf(sPref.getString("swipeOption", "DELETE"));
         swipeDirectionToRight = sPref.getBoolean("swipeDirection", true);
+
+        backButton1 = Actions.valueOf(sPref.getString("backButton1", "COPYCLIPBOARD"));
+        backButton1 = Actions.valueOf(sPref.getString("backButton1", "SEND"));
+        backButton1 = Actions.valueOf(sPref.getString("backButton1", "UPDATE"));
+
 
         return sPref.getString("message", "");
     }

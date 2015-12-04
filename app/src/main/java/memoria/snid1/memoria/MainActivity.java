@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
             @Override
             public void onListChanged() {
                 //adapter.notifyDataSetChanged();
-                Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
             }
 
             @Override
