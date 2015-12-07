@@ -76,7 +76,7 @@ public class MemAdapter extends ArrayAdapter {
         ((TextView) newView.findViewById(R.id.noteViev)).setText(mem.getNote());
         ((TextView) newView.findViewById(R.id.dateViev)).setText(getFormattedDate(mem));
         ((TextView) newView.findViewById(R.id.timeViev)).setText(getFormattedTime(mem));
-//TODO: 2nd button
+
         ((Button)newView.findViewById(R.id.after_swipe_button_1)).setText(SettingsManager.INSTANCE.backButton1.getDescr());
         ((Button)newView.findViewById(R.id.after_swipe_button_2)).setText(SettingsManager.INSTANCE.backButton2.getDescr());
         ((Button)newView.findViewById(R.id.after_swipe_button_3)).setText(SettingsManager.INSTANCE.backButton3.getDescr());

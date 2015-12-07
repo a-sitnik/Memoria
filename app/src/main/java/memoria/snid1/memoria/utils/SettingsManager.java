@@ -78,8 +78,8 @@ public class SettingsManager {
         swipeDirectionToRight = sPref.getBoolean("swipeDirection", true);
 
         backButton1 = Actions.valueOf(sPref.getString("backButton1", "COPYCLIPBOARD"));
-        backButton1 = Actions.valueOf(sPref.getString("backButton1", "SEND"));
-        backButton1 = Actions.valueOf(sPref.getString("backButton1", "UPDATE"));
+        backButton2 = Actions.valueOf(sPref.getString("backButton2", "SEND"));
+        backButton3 = Actions.valueOf(sPref.getString("backButton3", "UPDATE"));
 
 
         return sPref.getString("message", "");
