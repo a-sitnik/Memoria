@@ -26,7 +26,7 @@
         <ImageButton
             android:id="@+id/erase"
             android:onClick="onEraseClick"
-            android:background="@mipmap/cancel"
+            android:background="@mipmap/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
@@ -50,7 +50,7 @@
         android:onClick="onRestoreClick"
         android:layout_width="48sp"
         android:layout_height="48sp"
-        android:background="@mipmap/button_restore"
+        android:background="@mipmap/restore"
         android:layout_below="@+id/line1"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

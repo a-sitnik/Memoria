@@ -3,8 +3,9 @@ package memoria.snid1.memoria.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.TextView;
 
-import memoria.snid1.memoria.MainActivity;
 import memoria.snid1.memoria.R;
 
 /**
@@ -85,6 +86,29 @@ public class SettingsManager {
         return sPref.getString("message", "");
     }
 
+    public static void getCustomizableButton(TextView butt, Actions act){
+        switch (act) {
+            case OFF:
+                butt.setVisibility(View.GONE);
+                break;
+            case DELETE:
+                butt.setText(R.string.deleteAct);
+                butt.setBackgroundResource(R.mipmap.delete);
+                break;
+            case UPDATE:
+                butt.setText(R.string.updateAct);
+                butt.setBackgroundResource(R.mipmap.edit);
+                break;
+            case COPYCLIPBOARD:
+                butt.setText(R.string.copyAct);
+                butt.setBackgroundResource(R.mipmap.copy);
+                break;
+            case SEND:
+                butt.setText(R.string.sendAct);
+                butt.setBackgroundResource(R.mipmap.share);
+                break;
+        }
+    }
     public Actions getClickOption() {
         return clickOption;
     }

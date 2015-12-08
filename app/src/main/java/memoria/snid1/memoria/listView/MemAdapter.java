@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.fortysevendeg.swipelistview.SwipeListView;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import memoria.snid1.memoria.R;
 import memoria.snid1.memoria.database.DAOMem;
@@ -62,28 +62,51 @@ public class MemAdapter extends ArrayAdapter {
 */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View newView= inflater.inflate(R.layout.mem_in_list_item, parent, false);
-
-        /*super.getView(position, convertView, parent);
-        View view = convertView;*/
-        /*if (view == null) {
-            view = lInflater.inflate(R.layout.mem_in_list_item, parent, false);
-        }*/
         DAOMem mem = getMem(position);
+        View newView = convertView;
+        final ViewHolder holder;
+
+        if (newView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            newView = inflater.inflate(R.layout.mem_in_list_item, parent, false);
+            holder = new ViewHolder();
+
+            holder.noteView = (TextView) newView.findViewById(R.id.noteView);
+            holder.dateView = (TextView)newView.findViewById(R.id.dateView);
+            holder.timeView = (TextView)newView.findViewById(R.id.timeView);
+
+            holder.backButton1 = (Button) newView.findViewById(R.id.after_swipe_button_1);
+            holder.backButton2 = (Button) newView.findViewById(R.id.after_swipe_button_2);
+            holder.backButton3 = (Button) newView.findViewById(R.id.after_swipe_button_3);
+
+            newView.setTag(holder);
+        } else {
+            holder = (ViewHolder) newView.getTag();
+
+        }
+        ((SwipeListView)parent).recycle(newView, position); //TODO: guess what it does
 
         // filling viev
-        ((TextView) newView.findViewById(R.id.noteViev)).setText(mem.getNote());
-        ((TextView) newView.findViewById(R.id.dateViev)).setText(getFormattedDate(mem));
-        ((TextView) newView.findViewById(R.id.timeViev)).setText(getFormattedTime(mem));
+        holder.noteView.setText(mem.getNote());
+        holder.dateView.setText(getFormattedDate(mem));
+        holder.timeView.setText(getFormattedTime(mem));
 
-        ((Button)newView.findViewById(R.id.after_swipe_button_1)).setText(SettingsManager.INSTANCE.backButton1.getDescr());
-        ((Button)newView.findViewById(R.id.after_swipe_button_2)).setText(SettingsManager.INSTANCE.backButton2.getDescr());
-        ((Button)newView.findViewById(R.id.after_swipe_button_3)).setText(SettingsManager.INSTANCE.backButton3.getDescr());
+        SettingsManager.getCustomizableButton(holder.backButton1, SettingsManager.INSTANCE.backButton1);
+        SettingsManager.getCustomizableButton(holder.backButton2, SettingsManager.INSTANCE.backButton2);
+        SettingsManager.getCustomizableButton(holder.backButton3, SettingsManager.INSTANCE.backButton3);
 
         //((Button) newView.findViewById(R.id.after_swipe_button_1)).
         return newView;
     }
+    static class ViewHolder {
+        TextView noteView;
+        TextView dateView;
+        TextView timeView;
+        Button backButton1;
+        Button backButton2;
+        Button backButton3;
+    }
+
 
     // obj by position
    public DAOMem getMem(int position) {

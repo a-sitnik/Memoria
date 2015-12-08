@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.fortysevendeg.swipelistview.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import memoria.snid1.memoria.database.DAOManager;
 import memoria.snid1.memoria.database.DAOMem;
@@ -26,7 +25,7 @@ import memoria.snid1.memoria.utils.SettingsManager;
 import static java.lang.Math.min;
 
 
-public class MainActivity extends FragmentActivity /*implements AdapterView.OnItemLongClickListener*/ {
+public class MainActivity extends FragmentActivity{
 
     final Intent intent = new Intent(Intent.ACTION_SEND);
 
@@ -68,36 +67,32 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
         listNotes.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
             public void onOpened(int position, boolean toRight) {
-                //Toast.makeText(getApplicationContext(), "what is onOpened???", Toast.LENGTH_SHORT).show();
                 if (SettingsManager.INSTANCE.swipeDirectionToRight == toRight){
-                    executeListAction(SettingsManager.INSTANCE.getSwipeOption(),position);
+                    executeListAction(SettingsManager.INSTANCE.getSwipeOption(), position);
+                    listNotes.dismiss(position);
+                    fullRefresh();
+
+                    // adapter.notifyDataSetChanged();
+                    //TODO:
+                    // http://stackoverflow.com/questions/34147816/android-custom-listview-adapter-doesnt-want-to-fit-deleted-items
                 }
 
             }
 
             @Override
             public void onClosed(int position, boolean fromRight) {
-                //Toast.makeText(getApplicationContext(), "what is onClosed???", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onListChanged() {
-                //adapter.notifyDataSetChanged();
-                //Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onMove(int position, float x) {
-
             }
             @Override
             public void onStartOpen(int position, int action, boolean right) {
-
             }
-
             @Override
             public void onStartClose(int position, boolean right) {
-
             }
             /** Place to set tap action **/
             /////////////////
@@ -116,7 +111,6 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
                 for (int position : reverseSortedPositions) {
                     // data.remove(position);
                 }
-                //renderList();
             }
 
         });
@@ -127,7 +121,6 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
     protected void onPause() {
         Dao.close();
         Settings.savePrefs(edText.getText().toString());
-        //super.onDestroy();
         super.onPause();
     }
 
@@ -171,7 +164,12 @@ public class MainActivity extends FragmentActivity /*implements AdapterView.OnIt
         adapter.notifyDataSetChanged();
         //adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems); // R.layout.mem_in_list_item
         //listNotes.setAdapter(adapter);
-
+    }
+    //TODO: refactor every usage of this method
+    void fullRefresh(){
+        Mems = Dao.getAllDAOMems();
+        adapter = new MemAdapter(this, R.layout.mem_in_list_item, Mems);
+        listNotes.setAdapter(adapter);
     }
 
     ///Swipe ACTION SELECTOR & METHODS////////////////////////////////////////////////////////////////////////////////////////
