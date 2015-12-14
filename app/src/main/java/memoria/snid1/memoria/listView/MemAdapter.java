@@ -8,12 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fortysevendeg.swipelistview.SwipeListView;
+//import com.fortysevendeg.swipelistview.SwipeListView;
 
 import java.util.ArrayList;
 
 import memoria.snid1.memoria.R;
 import memoria.snid1.memoria.database.DAOMem;
+import memoria.snid1.memoria.libSwipeListView.SwipeListView;
 import memoria.snid1.memoria.utils.DateTimeFormatter;
 import memoria.snid1.memoria.utils.SettingsManager;
 

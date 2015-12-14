@@ -12,12 +12,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.fortysevendeg.swipelistview.*;
+
+//import com.fortysevendeg.swipelistview.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import memoria.snid1.memoria.database.DAOManager;
 import memoria.snid1.memoria.database.DAOMem;
+import memoria.snid1.memoria.libSwipeListView.BaseSwipeListViewListener;
+import memoria.snid1.memoria.libSwipeListView.SwipeListView;
 import memoria.snid1.memoria.listView.MemAdapter;
 import memoria.snid1.memoria.utils.SettingsManager;
 
@@ -25,7 +29,7 @@ import memoria.snid1.memoria.utils.SettingsManager;
 import static java.lang.Math.min;
 
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity /*implements AdapterView.OnItemLongClickListener*/ {
 
     final Intent intent = new Intent(Intent.ACTION_SEND);
 
@@ -67,13 +71,13 @@ public class MainActivity extends FragmentActivity{
         listNotes.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
             public void onOpened(int position, boolean toRight) {
+                //Toast.makeText(getApplicationContext(), "what is onOpened???", Toast.LENGTH_SHORT).show();
                 if (SettingsManager.INSTANCE.swipeDirectionToRight == toRight){
                     executeListAction(SettingsManager.INSTANCE.getSwipeOption(), position);
                     listNotes.dismiss(position);
                     fullRefresh();
 
                     // adapter.notifyDataSetChanged();
-                    //TODO:
                     // http://stackoverflow.com/questions/34147816/android-custom-listview-adapter-doesnt-want-to-fit-deleted-items
                 }
 
@@ -81,18 +85,28 @@ public class MainActivity extends FragmentActivity{
 
             @Override
             public void onClosed(int position, boolean fromRight) {
+                //Toast.makeText(getApplicationContext(), "what is onClosed???", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onListChanged() {
+
+                //adapter.notifyDataSetChanged();
+                //Toast.makeText(getApplicationContext(), "what is onChanged???", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onMove(int position, float x) {
+
             }
             @Override
             public void onStartOpen(int position, int action, boolean right) {
+
             }
+
             @Override
             public void onStartClose(int position, boolean right) {
+
             }
             /** Place to set tap action **/
             /////////////////
@@ -108,9 +122,13 @@ public class MainActivity extends FragmentActivity{
 
             @Override
             public void onDismiss(int[] reverseSortedPositions) {
+                //Toast.makeText(getApplicationContext(), "what is onDismissed???", Toast.LENGTH_SHORT).show();
+
+                //executeListAction(SettingsManager.INSTANCE.getSwipeOption(), position);
                 for (int position : reverseSortedPositions) {
                     // data.remove(position);
                 }
+                //renderList();
             }
 
         });
@@ -121,6 +139,7 @@ public class MainActivity extends FragmentActivity{
     protected void onPause() {
         Dao.close();
         Settings.savePrefs(edText.getText().toString());
+        //super.onDestroy();
         super.onPause();
     }
 

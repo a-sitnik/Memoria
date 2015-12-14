@@ -56,7 +56,7 @@
         android:layout_alignParentEnd="true" />
 
 
-    <com.fortysevendeg.swipelistview.SwipeListView
+    <memoria.snid1.memoria.libSwipeListView.SwipeListView
         xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:id="@+id/list_s"
         android:listSelector="#00000000"
